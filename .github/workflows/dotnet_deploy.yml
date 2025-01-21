@@ -1,0 +1,13 @@
+on: [push]
+
+jobs:
+  dotnet-deploy:
+    runs-on: ubuntu-latest
+    name: Deploy a dotnet app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/composite_actions/deploy.yml
+        with:
+          ssh_host: ${{ secrets.REMOTE_HOST }}
+          ssh_user: ${{ secrets.REMOTE_HOST_KEY }}
+          ssh_user_key: ${{ secrets.REMOTE_HOST_KEY }}
