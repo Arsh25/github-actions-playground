@@ -1,0 +1,31 @@
+name: 'Deploy via SSH'
+description: 'Deploy some code via SSH'
+
+inputs:
+    ssh_host:
+        description: 'SSH host DNS/IP'
+        required: true
+    ssh_user:
+        description: 'Login User'
+        required: true
+    ssh_user_key:
+        description: 'SSH key for ssh_user'
+        required: true
+    port:
+        description: 'SSH port'
+        required: true
+        default: 22
+
+runs:
+    using: "composite"
+    steps:
+        - name: Test SSH
+          uses: appleboy/ssh-action@v1.2.0
+          with:
+            host: ${{ inputs.ssh_host }}
+            username: ${{ inputs.ssh_user }}
+            key: ${{ inputs.ssh_user_key }}
+            port: ${{ inouts.port }}
+            script: |
+              whoami
+              ls -al /opt/deploytest
