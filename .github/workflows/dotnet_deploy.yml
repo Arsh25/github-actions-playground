@@ -6,7 +6,7 @@ jobs:
     name: Deploy a dotnet app
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/composite_actions/deploy.yml
+      - uses: ${{ github.workspace}}/.github/composite_actions/deploy
         with:
           ssh_host: ${{ secrets.REMOTE_HOST }}
           ssh_user: ${{ secrets.REMOTE_HOST_KEY }}
