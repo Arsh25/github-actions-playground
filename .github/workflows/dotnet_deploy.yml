@@ -30,13 +30,15 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.commit }}
     outputs:
-      checked-out-sha: ${{ steps.custom-checkout.outputs.ref}}
+      checked-out-sha: ${{ steps.check-sha.conclusion}}
     steps:
       - id: 'custom-checkout'
         uses: actions/checkout@v4
         with:
           fetch-depth: ${{ inputs.checkout-depth}}
       - run: git checkout ${{ inputs.commit }}
+      - id: 'check-sha'
+        run: git log -1
       - uses: ./.github/composite_actions/deploy
         with:
           ssh_host: ${{ secrets.REMOTE_HOST }}
@@ -49,8 +51,8 @@ jobs:
     steps:
       - if: ${{ inputs.commit}}
         run: |
-          echo "We asked for sha ${{inputs.commit}}. We checked out the commit with " >> commit_info.txt
-      - run: git log -1 >> commit_info.txt
+          echo "We asked for sha ${{inputs.commit}}. \
+          We checked out the commit with ${{ needs.revert-deployment.outputs.checked-out-sha }}" >> commit_info.txt
       - run: cat commit_info.txt
 
 
