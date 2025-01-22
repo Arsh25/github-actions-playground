@@ -8,6 +8,11 @@ on:
           description:  'The commit to checkout. Same format as git checkout'
           type: string
           required: true
+        checkout-depth:
+          description: 'Depth to checkout (default 2)'
+          type: number
+          required: true
+          default: 2
 
 jobs:
   dotnet-deploy:
@@ -26,7 +31,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.commit }}
+          fetch-depth: ${{ inputs.checkout-depth}}
+      - run: git checkout ${{ inputs.commit }}
       - uses: ./.github/composite_actions/deploy
         with:
           ssh_host: ${{ secrets.REMOTE_HOST }}
