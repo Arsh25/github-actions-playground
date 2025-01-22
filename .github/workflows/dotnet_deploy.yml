@@ -30,10 +30,17 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.commit }}
     steps:
-      - uses: actions/checkout@v4
+      - id: 'custom-checkout'
+        uses: actions/checkout@v4
         with:
           fetch-depth: ${{ inputs.checkout-depth}}
       - run: git checkout ${{ inputs.commit }}
+      - run: |
+          echo "We asked for sha ${{inputs.commit}}. \
+          We checked out the commit with " >> commit_info.txt
+      - id: 'check-sha'
+        run: git log -1 | head -1 >> commit_info.txt
+      - run: cat commit_info.txt
       - uses: ./.github/composite_actions/deploy
         with:
           ssh_host: ${{ secrets.REMOTE_HOST }}
