@@ -30,7 +30,7 @@ jobs:
           ssh_user: ${{ secrets.REMOTE_HOST_USER }}
           ssh_user_key: ${{ secrets.REMOTE_HOST_KEY }}
           source: commit_info.txt
-          dst: /opt/${{ secrets.REMOTE_HOST_USER }}/commit_info
+          dst: /opt/deploytest/commit_info
   revert-deployment:
     runs-on: ubuntu-latest
     if: ${{ inputs.commit }}
