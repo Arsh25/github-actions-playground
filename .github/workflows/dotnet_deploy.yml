@@ -17,6 +17,7 @@ on:
 jobs:
   dotnet-deploy:
     runs-on: ubuntu-latest
+    if: ${{ ! inputs.commit }}
     name: Deploy a dotnet app
     steps:
       - uses: actions/checkout@v4
