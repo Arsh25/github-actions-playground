@@ -28,15 +28,6 @@ inputs:
 runs:
     using: "composite"
     steps:
-        - name: Test SSH
-          uses: appleboy/ssh-action@v1.2.0
-          if: ${{ inputs.ssh_cmd }}
-          with:
-            host: ${{ inputs.ssh_host }}
-            username: ${{ inputs.ssh_user }}
-            key: ${{ inputs.ssh_user_key }}
-            port: ${{ inputs.port }}
-            script: ${{ inputs.ssh_cmd }}
         - name: Copy files 
           if: ${{ inputs.source && inputs.dst }}
           uses: appleboy/scp-action@v0.1.7
@@ -47,5 +38,13 @@ runs:
             port: ${{ inputs.port }}
             source: ${{ inputs.source }}
             target: ${{ inputs.dst }} 
-        
+        - name: Test SSH
+          uses: appleboy/ssh-action@v1.2.0
+          if: ${{ inputs.ssh_cmd }}
+          with:
+            host: ${{ inputs.ssh_host }}
+            username: ${{ inputs.ssh_user }}
+            key: ${{ inputs.ssh_user_key }}
+            port: ${{ inputs.port }}
+            script: ${{ inputs.ssh_cmd }}
     
