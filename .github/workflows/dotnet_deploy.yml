@@ -41,8 +41,8 @@ jobs:
           fetch-depth: ${{ inputs.checkout-depth}}
       - run: git checkout ${{ inputs.commit }}
       - run: |
-          echo "We asked for sha ${{inputs.commit}}. \
-          We checked out the commit with " >> commit_info.txt
+          echo "We asked for commit ${{inputs.commit}}. \
+          We checked out " >> commit_info.txt
       - id: 'check-sha'
         run: git log -1 | head -1 >> commit_info.txt
       - run: cat commit_info.txt
@@ -51,4 +51,6 @@ jobs:
           ssh_host: ${{ secrets.REMOTE_HOST }}
           ssh_user: ${{ secrets.REMOTE_HOST_USER }}
           ssh_user_key: ${{ secrets.REMOTE_HOST_KEY }}
+          source: commit_info.txt
+          dst: /opt/deploytest/commit_info
 
