@@ -29,30 +29,21 @@ jobs:
   revert-deployment:
     runs-on: ubuntu-latest
     if: ${{ inputs.commit }}
-    outputs:
-      checked-out-sha: ${{ steps.check-sha.conclusion}}
     steps:
       - id: 'custom-checkout'
         uses: actions/checkout@v4
         with:
           fetch-depth: ${{ inputs.checkout-depth}}
       - run: git checkout ${{ inputs.commit }}
+      - run: |
+          echo "We asked for sha ${{inputs.commit}}. \
+          We checked out the commit with " >> commit_info.txt
       - id: 'check-sha'
-        run: git log -1
+        run: git log -1 | head -1 >> commit_info.txt
+      - run: cat commit_info.txt
       - uses: ./.github/composite_actions/deploy
         with:
           ssh_host: ${{ secrets.REMOTE_HOST }}
           ssh_user: ${{ secrets.REMOTE_HOST_USER }}
           ssh_user_key: ${{ secrets.REMOTE_HOST_KEY }}
-  create-git-info-file:
-    name: 'Create example file'
-    runs-on: ubuntu-latest
-    needs: revert-deployment
-    steps:
-      - if: ${{ inputs.commit}}
-        run: |
-          echo "We asked for sha ${{inputs.commit}}. \
-          We checked out the commit with ${{ needs.revert-deployment.outputs.checked-out-sha }}" >> commit_info.txt
-      - run: cat commit_info.txt
-
 
