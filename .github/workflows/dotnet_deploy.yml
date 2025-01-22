@@ -31,6 +31,9 @@ jobs:
           ssh_user_key: ${{ secrets.REMOTE_HOST_KEY }}
           source: commit_info.txt
           dst: /opt/deploytest/commit_info
+          ssh_cmd: |
+            cp /opt/deploytest/commit_info/commit_info.txt /opt/deploytest/info_file.txt
+            cat /opt/deploytest/info_file.txt
   revert-deployment:
     runs-on: ubuntu-latest
     if: ${{ inputs.commit }}
