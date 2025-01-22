@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.commit }}
     outputs:
-      checked-out-sha: ${{ steps.custom-checkout.outputs.commit}}
+      checked-out-sha: ${{ steps.custom-checkout.outputs.ref}}
     steps:
       - id: 'custom-checkout'
         uses: actions/checkout@v4
