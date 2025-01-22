@@ -2,6 +2,12 @@ on:
     push:
         branches:
             - main
+    workflow_dispatch:
+      inputs:
+        commit:
+          description:  'The commit to checkout. Same format as git checkout'
+          type: string
+          required: true
 
 jobs:
   dotnet-deploy:
@@ -14,3 +20,16 @@ jobs:
           ssh_host: ${{ secrets.REMOTE_HOST }}
           ssh_user: ${{ secrets.REMOTE_HOST_USER }}
           ssh_user_key: ${{ secrets.REMOTE_HOST_KEY }}
+  revert-deployment:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit }}
+      - uses: ./.github/composite_actions/deploy
+        with:
+          ssh_host: ${{ secrets.REMOTE_HOST }}
+          ssh_user: ${{ secrets.REMOTE_HOST_USER }}
+          ssh_user_key: ${{ secrets.REMOTE_HOST_KEY }}
+
