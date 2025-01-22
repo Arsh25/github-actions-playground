@@ -46,12 +46,11 @@ jobs:
     name: 'Create example file'
     runs-on: ubuntu-latest
     needs: revert-deployment
-
     steps:
       - if: ${{ inputs.commit}}
         run: |
-          echo "We asked for sha ${{inputs.commit}}. We checked out the commit with  \
-          sha ${{needs.revert-deployment.outputs.checked-out-sha}} " >> commit_info.txt
+          echo "We asked for sha ${{inputs.commit}}. We checked out the commit with " >> commit_info.txt
+      - run: git log -1 >> commit_info.txt
       - run: cat commit_info.txt
 
 
