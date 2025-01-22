@@ -2,6 +2,7 @@ on:
     push:
         branches:
             - main
+    pull_request:
     workflow_dispatch:
       inputs:
         commit:
@@ -21,11 +22,15 @@ jobs:
     name: Deploy a dotnet app
     steps:
       - uses: actions/checkout@v4
+      - id: 'check-sha'
+        run: git log -1 | head -1 >> commit_info.txt
       - uses: ./.github/composite_actions/deploy
         with:
           ssh_host: ${{ secrets.REMOTE_HOST }}
           ssh_user: ${{ secrets.REMOTE_HOST_USER }}
           ssh_user_key: ${{ secrets.REMOTE_HOST_KEY }}
+          source: commit_info.txt
+          dst: /opt/${{ secrets.REMOTE_HOST_USER }}/commit_info
   revert-deployment:
     runs-on: ubuntu-latest
     if: ${{ inputs.commit }}
