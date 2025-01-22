@@ -43,5 +43,5 @@ runs:
             username: ${{ inputs.ssh_user }}
             key: ${{ inputs.ssh_user_key }}
             port: ${{ inputs.port }}
-            soure: ${{ inputs.source }}
+            source: ${{ inputs.source }}
             target: ${{ inputs.dst }}
