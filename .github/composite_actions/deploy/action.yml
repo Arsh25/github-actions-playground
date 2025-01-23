@@ -15,6 +15,9 @@ inputs:
         description: 'SSH port'
         required: true
         default: 22
+    ssh_cmd:
+        description: 'Command(s) to run via SSH '
+        required: false
     source:
         description: 'Source file/directory'
         required: false
@@ -25,16 +28,6 @@ inputs:
 runs:
     using: "composite"
     steps:
-        - name: Test SSH
-          uses: appleboy/ssh-action@v1.2.0
-          with:
-            host: ${{ inputs.ssh_host }}
-            username: ${{ inputs.ssh_user }}
-            key: ${{ inputs.ssh_user_key }}
-            port: ${{ inputs.port }}
-            script: |
-              whoami
-              ls -al /opt/deploytest
         - name: Copy files 
           if: ${{ inputs.source && inputs.dst }}
           uses: appleboy/scp-action@v0.1.7
@@ -44,4 +37,14 @@ runs:
             key: ${{ inputs.ssh_user_key }}
             port: ${{ inputs.port }}
             source: ${{ inputs.source }}
-            target: ${{ inputs.dst }}
+            target: ${{ inputs.dst }} 
+        - name: Test SSH
+          uses: appleboy/ssh-action@v1.2.0
+          if: ${{ inputs.ssh_cmd }}
+          with:
+            host: ${{ inputs.ssh_host }}
+            username: ${{ inputs.ssh_user }}
+            key: ${{ inputs.ssh_user_key }}
+            port: ${{ inputs.port }}
+            script: ${{ inputs.ssh_cmd }}
+    
