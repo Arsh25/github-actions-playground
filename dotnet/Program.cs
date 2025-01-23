@@ -16,5 +16,13 @@ app.MapGet("/info",async() =>
     }
     return Results.Content(content);
 });
+app.MapGet("/cat",async() =>
+{
+    string apiBase = "https://cataas.com/";
+    string randomEndpoint = "cat?json=true";
+    HttpClient client = new HttpClient();
+    using HttpResponseMessage response = await client.GetAsync(apiBase+randomEndpoint); 
+    return Results.Content(await response.Content.ReadAsStringAsync());
+});
 
 app.Run();
